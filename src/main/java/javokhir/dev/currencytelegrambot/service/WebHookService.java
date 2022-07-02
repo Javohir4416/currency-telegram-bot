@@ -17,7 +17,7 @@ public class WebHookService {
           SendMessage sendMessage=new SendMessage();
           sendMessage.setChatId(update.getMessage().getChatId());
           sendMessage.setText("Hello");
-          ResultTelegram resultTelegram = telegramFeign.sendMessageToUser(sendMessage.getChatId(),sendMessage.getText());
+          ResultTelegram resultTelegram = telegramFeign.sendMessageToUser(sendMessage);
           System.out.println(resultTelegram);
      }
 }

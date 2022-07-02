@@ -12,5 +12,5 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @FeignClient(url = RestConstants.TELEGRAM_BASE_URL,name = "TelegramFeign")
 public interface TelegramFeign {
     @PostMapping("/bot5076755668:AAFRHhP9_PoPPAl6Q-f4H4ZM6Bz6H7ppCUo/sendMessage")
-    ResultTelegram sendMessageToUser(@RequestParam String chat_id,@RequestParam String text);
+    ResultTelegram sendMessageToUser(@RequestBody SendMessage sendMessage);
 }

@@ -4,15 +4,18 @@ import javokhir.dev.currencytelegrambot.entity.User;
 import javokhir.dev.currencytelegrambot.feign.TelegramFeign;
 import javokhir.dev.currencytelegrambot.repo.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Service
-@RequiredArgsConstructor
 public class TelegramService {
-   private final WebHookService webHookService;
-   private final UserRepo userRepo;
-   private final UserService userService;
+    @Autowired
+   private WebHookService webHookService;
+    @Autowired
+   private  UserRepo userRepo;
+    @Autowired
+   private  UserService userService;
 
 
 

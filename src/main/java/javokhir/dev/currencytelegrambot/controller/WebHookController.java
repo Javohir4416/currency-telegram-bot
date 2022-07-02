@@ -2,7 +2,6 @@ package javokhir.dev.currencytelegrambot.controller;
 
 import javokhir.dev.currencytelegrambot.service.TelegramService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

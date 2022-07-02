@@ -1,4 +1,4 @@
-package com.example.currencytelegrambot;
+package javokhir.dev.currencytelegrambot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

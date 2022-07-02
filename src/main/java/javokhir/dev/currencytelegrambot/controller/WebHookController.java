@@ -23,8 +23,4 @@ public class WebHookController {
     public void getUpdates(@RequestBody Update update){
         telegramService.getUpdates(update);
     }
-    @PostMapping("/ping")
-    public void ping(){
-        System.out.println("Hello");
-    }
 }

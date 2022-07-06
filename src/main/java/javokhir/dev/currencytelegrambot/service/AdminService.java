@@ -52,8 +52,7 @@ public class AdminService {
         }
     }
 
-    public void sendMessageToAdmin(Update update) {
-        User userFromUpdate = userService.getUserFromUpdate(update);
+    public void sendMessageToAdmin(User userFromUpdate) {
         userFromUpdate.setState(userStateRepo.findByUserState(UserStateNames.SEND_MESSAGE_TO_USERS));
         User save = userRepo.save(userFromUpdate);
         SendMessage sendMessage = new SendMessage(save.getId().toString(),
@@ -61,8 +60,7 @@ public class AdminService {
         telegramFeign.sendMessageToUser(sendMessage);
     }
 
-    public void checkForAdmin(Update update) {
-        User userFromUpdate = userService.getUserFromUpdate(update);
+    public void checkForAdmin(User userFromUpdate) {
         userFromUpdate.setState(userStateRepo.findByUserState(UserStateNames.ENTER_PASSWORD_FOR_ADMIN));
         User save = userRepo.save(userFromUpdate);
         SendMessage sendMessage = new SendMessage(save.getId().toString(),

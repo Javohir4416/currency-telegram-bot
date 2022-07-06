@@ -66,6 +66,45 @@ public class ReplyMarkup {
             row2Button1.setCallbackData("REKLAMA");
             row2.add(row2Button1);
             rowList.add(row2);
+        } else if (user.getState().equals(userStateRepo.findByUserState(UserStateNames.SHOW_MENU))) {
+            row1Button1.setText("Jahon valyuta kurslarini " +
+                    "o'zbek so'midagi qiymatini bilish ");
+            row1Button1.setCallbackData("INFORMATION");
+            row1.add(row1Button1);
+            rowList.add(row1);
+            List<InlineKeyboardButton> row2 = new ArrayList<>();
+            InlineKeyboardButton row2Button1 = new InlineKeyboardButton();
+            row2Button1.setText("Valyutalarni konvertatsiya qilish");
+            row2Button1.setCallbackData("CONVERTOR");
+            row2.add(row2Button1);
+            rowList.add(row2);
+        }
+        else if (user.getState().equals(userStateRepo.findByUserState(UserStateNames.GET_INFORMATION))){
+            row1Button1.setText("\uD83C\uDDFA\uD83C\uDDF8USD\uD83C\uDDFA\uD83C\uDDF8");
+            row1Button1.setCallbackData("USD");
+            InlineKeyboardButton row1Button2;
+            row1Button2 = new InlineKeyboardButton();
+            row1Button2.setText("\uD83C\uDDF7\uD83C\uDDFARUB\uD83C\uDDF7\uD83C\uDDFA");
+            row1Button2.setCallbackData("RUB");
+            InlineKeyboardButton row1Button3=new InlineKeyboardButton();
+            row1Button3.setText("\uD83C\uDDEA\uD83C\uDDFAEUR\uD83C\uDDEA\uD83C\uDDFA");
+            row1Button3.setCallbackData("EUR");
+            List<InlineKeyboardButton> row2 = new ArrayList<>();
+            InlineKeyboardButton row2Button1 = new InlineKeyboardButton();
+            row2Button1.setText("Qolgan valyutalarni bilish");
+            row2Button1.setCallbackData("OTHERS");
+            List<InlineKeyboardButton> row3 = new ArrayList<>();
+            InlineKeyboardButton row3Button1 = new InlineKeyboardButton();
+            row3Button1.setText("Back");
+            row3Button1.setCallbackData("BACK");
+            row1.add(row1Button1);
+            row1.add(row1Button2);
+            row1.add(row1Button3);
+            rowList.add(row1);
+            row2.add(row2Button1);
+            rowList.add(row2);
+            row3.add(row3Button1);
+            rowList.add(row3);
         }
         inlineMarkup.setKeyboard(rowList);
         return inlineMarkup;

@@ -1,16 +1,24 @@
 package javokhir.dev.currencytelegrambot.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javokhir.dev.currencytelegrambot.entity.User;
 import javokhir.dev.currencytelegrambot.feign.TelegramFeign;
+import javokhir.dev.currencytelegrambot.payload.Currency;
 import javokhir.dev.currencytelegrambot.payload.enums.UserStateNames;
 import javokhir.dev.currencytelegrambot.repo.UserRepo;
 import javokhir.dev.currencytelegrambot.repo.UserStateRepo;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Random;
 
 @Service
@@ -100,12 +108,14 @@ public class UserService {
     }
 
     public void checkCode(User user, String text) {
-//
         if(text.equals("1111")){
             SendMessage sendMessage=new SendMessage();
             sendMessage.setChatId(user.getId().toString());
-            sendMessage.setText("Muvaffaqiyatli registratsiya qilindingiz . Xizmatlardan birini tanlang : ");
+            sendMessage.setText("Xizmatlardan birini tanlang : ");
             sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
+            user.setState(userStateRepo.findByUserState(UserStateNames.SHOW_MENU));
+            userRepo.save(user);
+            sendMessage.setReplyMarkup(replyMarkup.inlineMarkup(user));
             telegramFeign.sendMessageToUser(sendMessage);
         }
         else {
@@ -123,4 +133,60 @@ public class UserService {
             userRepo.save(user);
         }
     }
+
+    public void sendInformationToUser(User userFromUpdate) {
+        userFromUpdate.setState(userStateRepo.findByUserState(UserStateNames.GET_INFORMATION));
+        userRepo.save(userFromUpdate);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(userFromUpdate.getId().toString());
+        sendMessage.setText("Bu yerda mashhur valyutalar berilgan . Birini tanlang yoki o'zingiz xohlagan valyutaning qisqartmasini " +
+                "yozing ( masalan 'GBP' - Buyuk Britaniya funt sterlingi ) ");
+        sendMessage.setReplyMarkup(replyMarkup.inlineMarkup(userFromUpdate));
+        telegramFeign.sendMessageToUser(sendMessage);
+    }
+
+    @SneakyThrows
+    public void getInformation(Update update) {
+        User userFromUpdate = getUserFromUpdate(update);
+        SendMessage sendMessage=new SendMessage();
+        sendMessage.setChatId(userFromUpdate.getId().toString());
+        String data = update.getCallbackQuery().getData();
+        URL url = new URL("https://cbu.uz/oz/arkhiv-kursov-valyut/json/");
+        URLConnection urlConnection = url.openConnection();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Currency[] currencies = gson.fromJson(reader, Currency[].class);
+                if (data.equals("OTHERS")){
+                    StringBuilder list= new StringBuilder();
+                    for (Currency currency : currencies) {
+                        list.append("1 ").append(currency.getCcy()).append(" ( ").append(currency.getCcyNmUZ()).append(" ) ").append("  ➡️").append(currency.getRate()).append(" UZS\n");
+                    }
+                    sendMessage.setText(list.toString());
+                }
+                else if (data.equals("BACK")) {
+                    sendMessage.setChatId(userFromUpdate.getId().toString());
+                    sendMessage.setText("Xizmatlardan birini tanlang : ");
+                    userFromUpdate.setState(userStateRepo.findByUserState(UserStateNames.SHOW_MENU));
+                    userRepo.save(userFromUpdate);
+                    sendMessage.setReplyMarkup(replyMarkup.inlineMarkup(userFromUpdate));
+                }
+                else {
+                    for (Currency currency : currencies) {
+                        if (data.equals(currency.getCcy())) {
+                            sendMessage.setText("1 " + currency.getCcy() + " ( " + currency.getCcyNmUZ() + " ) " + " is " + currency.getRate() + " UZS");
+                        }
+                    }
+                }
+        telegramFeign.sendMessageToUser(sendMessage);
+    }
+
+//    public void backToMenu(User userFromUpdate) {
+//        SendMessage sendMessage=new SendMessage();
+//        sendMessage.setChatId(userFromUpdate.getId().toString());
+//        sendMessage.setText("Xizmatlardan birini tanlang : ");
+//        userFromUpdate.setState(userStateRepo.findByUserState(UserStateNames.SHOW_MENU));
+//        userRepo.save(userFromUpdate);
+//        sendMessage.setReplyMarkup(replyMarkup.inlineMarkup(userFromUpdate));
+//        telegramFeign.sendMessageToUser(sendMessage);
+//    }
 }

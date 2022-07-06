@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 @FeignClient(url = RestConstants.TELEGRAM_BASE_URL,name = "TelegramFeign")
 public interface TelegramFeign {
-    @PostMapping("/bot5076755668:AAG3FwT8xgnwD3LiEHMPzdGzkNtZhSoh_QQ/sendMessage")
+    @PostMapping("/bot5448676746:AAHOahsQhEZcOGvkRTP5N73mNQ5fZPN2rac/sendMessage")
     ResultTelegram sendMessageToUser(@RequestBody SendMessage sendMessage);
 //    @PostMapping("/bot5076755668:AAG3FwT8xgnwD3LiEHMPzdGzkNtZhSoh_QQ/deleteMessage")
 //    void deleteMessage(@RequestParam String chat_id, @RequestParam int message_id);

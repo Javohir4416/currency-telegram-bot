@@ -52,7 +52,7 @@ public class TelegramService {
                             }
                             break;
                         case "/admin":
-                            adminService.checkForAdmin(update);
+                            adminService.checkForAdmin(userFromUpdate);
                             break;
 
                         default:
@@ -77,9 +77,16 @@ public class TelegramService {
 
 
         else if (update.hasCallbackQuery()) {
+            User userFromUpdate = userService.getUserFromUpdate(update);
             String data = update.getCallbackQuery().getData();
             if (data.equals("XABAR")) {
-                adminService.sendMessageToAdmin(update);
+                adminService.sendMessageToAdmin(userFromUpdate);
+            }
+            else if (data.equals("INFORMATION")){
+                userService.sendInformationToUser(userFromUpdate);
+            }
+            else if (userFromUpdate.getState().equals(userStateRepo.findByUserState(UserStateNames.GET_INFORMATION))){
+                userService.getInformation(update);
             }
         }
     }

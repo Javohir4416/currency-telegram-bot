@@ -48,10 +48,15 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.xabgesagtx/telegram-spring-boot-starter -->
         <!-- https://mvnrepository.com/artifact/com.github.xabgesagtx/telegram-spring-boot-starter -->
+<!--        <dependency>-->
+<!--            <groupId>com.github.xabgesagtx</groupId>-->
+<!--            <artifactId>telegram-spring-boot-starter</artifactId>-->
+<!--            <version>0.26</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>com.github.xabgesagtx</groupId>
-            <artifactId>telegram-spring-boot-starter</artifactId>
-            <version>0.26</version>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
+            <version>5.4.0</version>
         </dependency>
 
         <dependency>
@@ -86,8 +91,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>10</source>
-                    <target>10</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 <!--            <plugin>-->

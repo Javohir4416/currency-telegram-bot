@@ -44,11 +44,13 @@ public class AdminService {
         }
     }
 
-    public void sendMessageToUsers(String text) {
+    public void sendMessageToUsers(String text,User user1) {
         List<User> userRepoAll = userRepo.findAll();
         for (User user : userRepoAll) {
-            SendMessage sendMessage=new SendMessage(user.getId().toString(),text);
-            telegramFeign.sendMessageToUser(sendMessage);
+            if(!user.getId().equals(user1.getId())) {
+                SendMessage sendMessage = new SendMessage(user.getId().toString(), text);
+                telegramFeign.sendMessageToUser(sendMessage);
+            }
         }
     }
 

@@ -41,14 +41,17 @@ public class TelegramService {
 
 
             else {
-                User userFromUpdate = userService.getUserFromUpdate(update);
+                 User userFromUpdate = userService.getUserFromUpdate(update);
                 String text = update.getMessage().getText();
                 if(text!=null) {
                     switch (text) {
                         case "/start":
                             Optional<User> userOptional = userRepo.findById(userFromUpdate.getId());
                             if (userStateRepo.findByUserState(UserStateNames.START).equals(userFromUpdate.getState())) {
-                                userService.whenStart(userOptional.orElseThrow());
+                                if (userOptional.isPresent()) {
+                                    User user = userOptional.get();
+                                    userService.whenStart(user);
+                                }
                             }
                             break;
                         case "/admin":
@@ -57,7 +60,7 @@ public class TelegramService {
 
                         default:
                             if (userFromUpdate.getState().equals(userStateRepo.findByUserState(UserStateNames.SEND_MESSAGE_TO_USERS))) {
-                                adminService.sendMessageToUsers(text);
+                                adminService.sendMessageToUsers(text,userFromUpdate);
                             } else if (userFromUpdate.getState().equals(userStateRepo.findByUserState(UserStateNames.SHARE_NUMBER))) {
                                 userService.sendMessageAboutSendCode(userFromUpdate);
                             } else if (userFromUpdate.getState().equals(userStateRepo.findByUserState(UserStateNames.ENTER_CODE))) {

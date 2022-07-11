@@ -101,14 +101,14 @@ public class UserService {
         sendMessage.setChatId(user.getId().toString());
         user.setState(userStateRepo.findByUserState(UserStateNames.ENTER_CODE));
         User save = userRepo.save(user);
-//        smsService.sendMessageCode(save.getPhoneNumber(), user.getOtp());
+        smsService.sendMessageCode(save.getPhoneNumber(), user.getOtp());
         sendMessage.setText("Telefon raqamingizga jo'natilgan sms kodni kiriting : ");
         sendMessage.setReplyMarkup(new ReplyKeyboardRemove(true));
         telegramFeign.sendMessageToUser(sendMessage);
     }
 
     public void checkCode(User user, String text) {
-        if(text.equals("1111")){
+        if(text.equals(user.getOtp())){
             SendMessage sendMessage=new SendMessage();
             sendMessage.setChatId(user.getId().toString());
             sendMessage.setText("Xizmatlardan birini tanlang : ");
@@ -139,8 +139,8 @@ public class UserService {
         userRepo.save(userFromUpdate);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(userFromUpdate.getId().toString());
-        sendMessage.setText("Bu yerda mashhur valyutalar berilgan . Birini tanlang yoki o'zingiz xohlagan valyutaning qisqartmasini " +
-                "yozing ( masalan 'GBP' - Buyuk Britaniya funt sterlingi ) ");
+        sendMessage.setText("Bu yerda mashhur valyutalar berilgan . Birini tanlang yoki qolgan valyutalarni bilish  " +
+                "tugmasi orqali boshqa valyutalar haqida ma'lumot oling  ");
         sendMessage.setReplyMarkup(replyMarkup.inlineMarkup(userFromUpdate));
         telegramFeign.sendMessageToUser(sendMessage);
     }
